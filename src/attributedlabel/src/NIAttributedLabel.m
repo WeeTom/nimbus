@@ -832,6 +832,12 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
 
       foundLink = [self linkAtIndex:idx - offset];;
       if (foundLink) {
+#pragma mark - modified by weetom
+          if (foundLink.resultType == NSTextCheckingTypePhoneNumber) {
+              NSTextCheckingResult *result = [NSTextCheckingResult linkCheckingResultWithRange:NSMakeRange(foundLink.range.location + offset, foundLink.range.length) URL:[NSURL URLWithString:[NSString stringWithFormat:@"tel://%@", [foundLink.phoneNumber stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]]]];
+              return result;
+          }
+#pragma mark end - modified by weetom
         NSTextCheckingResult *result = [NSTextCheckingResult linkCheckingResultWithRange:NSMakeRange(foundLink.range.location + offset, foundLink.range.length) URL:foundLink.URL];
 
         return result;
@@ -976,8 +982,30 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark - modified by weetom
+-(UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+	// never return self. always return the result of [super hitTest..].
+	// this takes userInteraction state, enabled, alpha values etc. into account
+	UIView *hitResult = [super hitTest:point withEvent:event];
+	
+	// don't check for links if the event was handled by one of the subviews
+	if (hitResult != self) {
+		return hitResult;
+	}
+	
+	if (self.explicitLinkLocations || self.detectedlinkLocations) {
+		BOOL didHitLink = ([self linkAtPoint:point] != nil);
+		if (!didHitLink) {
+			// not catch the touch if it didn't hit a link
+			return nil;
+		}
+	}
+	return hitResult;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-  [super touchesBegan:touches withEvent:event];
+  //[super touchesBegan:touches withEvent:event];
 
   UITouch* touch = [touches anyObject];
   CGPoint point = [touch locationInView:self];
@@ -997,7 +1025,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-  [super touchesMoved:touches withEvent:event];
+  //[super touchesMoved:touches withEvent:event];
 
   UITouch* touch = [touches anyObject];
   CGPoint point = [touch locationInView:self];
@@ -1040,7 +1068,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-  [super touchesEnded:touches withEvent:event];
+  //[super touchesEnded:touches withEvent:event];
 
   [self.longPressTimer invalidate];
   self.longPressTimer = nil;
@@ -1064,7 +1092,7 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-  [super touchesCancelled:touches withEvent:event];
+  //[super touchesCancelled:touches withEvent:event];
 
   [self.longPressTimer invalidate];
   self.longPressTimer = nil;
@@ -1113,8 +1141,10 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
     NIDASSERT(NO);
     [actionSheet addButtonWithTitle:NSLocalizedString(@"Copy", @"")];
   }
-  actionSheet.title = title;
-
+#pragma mark - modified by weetom
+  actionSheet.title = [title stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+#pragma mark end - modified by weetom
+    
   if (!NIIsPad()) {
     [actionSheet setCancelButtonIndex:[actionSheet addButtonWithTitle:NSLocalizedString(@"Cancel", @"")]];
   }
@@ -1162,9 +1192,23 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
     // We add a no-op attribute in order to force a run to exist for each link. Otherwise the
     // runCount will be one in this line, causing the entire line to be highlighted rather than
     // just the link when when no special attributes are set.
+      
+#pragma mark - modified by weetom
+      id url = nil;
+      if (result.resultType == NSTextCheckingTypePhoneNumber) {
+         url = result.phoneNumber;
+          NSLog(@"%@", result.phoneNumber);
+      } else {
+          url = result.URL;
+      }
+      if (!url) {
+          return;
+      }
+#pragma mark end - modified by weetom
+
     [attributedString removeAttribute:kNILinkAttributeName range:result.range];
     [attributedString addAttribute:kNILinkAttributeName
-                             value:result.URL
+                             value:url
                              range:result.range];
 
     if (self.linksHaveUnderlines) {
