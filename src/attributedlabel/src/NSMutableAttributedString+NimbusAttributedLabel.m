@@ -88,11 +88,13 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setTextColor:(UIColor*)color range:(NSRange)range {
   if (nil != color.CGColor) {
-    [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
-
-    [self addAttribute:(NSString *)kCTForegroundColorAttributeName
-                 value:(id)color.CGColor
-                 range:range];
+      if (self.length >= NSMaxRange(range)) {
+          [self removeAttribute:(NSString *)kCTForegroundColorAttributeName range:range];
+          
+          [self addAttribute:(NSString *)kCTForegroundColorAttributeName
+                       value:(id)color.CGColor
+                       range:range];
+      }
   }
 }
 

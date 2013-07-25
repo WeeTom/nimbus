@@ -142,7 +142,9 @@ static const NSInteger NIPhotoScrubberViewUnknownTag = -1;
   CGSize boundsSize = self.bounds.size;
 
   // These numbers are roughly estimated from the Photos.app's scrubber.
-  CGFloat photoWidth  = floorf(boundsSize.height / 2.4f);
+#pragma mark - modified by weetom
+  CGFloat photoWidth  = floorf(boundsSize.height / 1.75f);
+#pragma mark end - modified by weetom end
   CGFloat photoHeight = floorf(photoWidth * 0.75f);
   
   return CGSizeMake(photoWidth, photoHeight);

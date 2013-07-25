@@ -185,8 +185,10 @@
                                    bounds.size.width, toolbarHeight);
 
   _toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
-  _toolbar.barStyle = UIBarStyleBlack;
-  _toolbar.translucent = self.toolbarIsTranslucent;
+    if (MD_SYSVersionUnder7) {
+        _toolbar.barStyle = UIBarStyleBlack;
+        _toolbar.translucent = self.toolbarIsTranslucent;
+    }
   _toolbar.autoresizingMask = (UIViewAutoresizingFlexibleWidth
                                | UIViewAutoresizingFlexibleTopMargin);
 
@@ -216,16 +218,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-
-  [[UIApplication sharedApplication] setStatusBarStyle: (NIIsPad()
-                                                         ? UIStatusBarStyleBlackOpaque
-                                                         : UIStatusBarStyleBlackTranslucent)
-                                              animated: animated];
-
-  UINavigationBar* navBar = self.navigationController.navigationBar;
-  navBar.barStyle = UIBarStyleBlack;
-  navBar.translucent = YES;
-
+    if (MD_SYSVersionUnder7) {
+        [[UIApplication sharedApplication] setStatusBarStyle: (NIIsPad()
+                                                               ? UIStatusBarStyleBlackOpaque
+                                                               : UIStatusBarStyleBlackTranslucent)
+                                                    animated: animated];
+        
+        UINavigationBar* navBar = self.navigationController.navigationBar;
+        navBar.barStyle = UIBarStyleBlack;
+        navBar.translucent = YES;
+    }
   _previousButton.enabled = [self.photoAlbumView hasPrevious];
   _nextButton.enabled = [self.photoAlbumView hasNext];
 }

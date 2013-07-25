@@ -165,7 +165,9 @@
   NIPhotoScrollView* photoScrollView = (NIPhotoScrollView *)pageView;
   photoScrollView.photoScrollViewDelegate = self;
   photoScrollView.zoomingAboveOriginalSizeIsEnabled = [self isZoomingAboveOriginalSizeEnabled];
-
+#pragma mark - modified by weetom
+    photoScrollView.maximumScale = 1.5;
+#pragma mark end - modified by weetom
   return pageView;
 }
 
@@ -178,7 +180,7 @@
     if (page.pageIndex == pageIndex) {
 
       // Only replace the photo if it's of a higher quality than one we're already showing.
-      if (photoSize > page.photoSize) {
+      if (photoSize == NIPhotoScrollViewPhotoSizeOriginal) {
         page.loading = NO;
         [page setImage:image photoSize:photoSize];
 

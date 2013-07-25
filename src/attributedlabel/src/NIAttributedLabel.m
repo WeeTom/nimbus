@@ -1189,32 +1189,34 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString *attributedS
       id url = nil;
       if (result.resultType == NSTextCheckingTypePhoneNumber) {
          url = result.phoneNumber;
-          NSLog(@"%@", result.phoneNumber);
       } else {
           url = result.URL;
       }
       if (!url) {
           return;
       }
+      
+      if (self.text.length >= NSMaxRange(result.range)) {
+          [attributedString removeAttribute:kNILinkAttributeName range:result.range];
+          [attributedString addAttribute:kNILinkAttributeName
+                                   value:url
+                                   range:result.range];
+          
+          if (self.linksHaveUnderlines) {
+              [attributedString setUnderlineStyle:kCTUnderlineStyleSingle
+                                         modifier:kCTUnderlinePatternSolid
+                                            range:result.range];
+          }
+          
+          if (self.attributesForLinks.count > 0) {
+              [attributedString addAttributes:self.attributesForLinks range:result.range];
+          }
+          if (self.attributesForHighlightedLink.count > 0 && NSEqualRanges(result.range, self.touchedLink.range)) {
+              [attributedString addAttributes:self.attributesForHighlightedLink range:result.range];
+          }
+      }
 #pragma mark end - modified by weetom
 
-    [attributedString removeAttribute:kNILinkAttributeName range:result.range];
-    [attributedString addAttribute:kNILinkAttributeName
-                             value:url
-                             range:result.range];
-
-    if (self.linksHaveUnderlines) {
-      [attributedString setUnderlineStyle:kCTUnderlineStyleSingle
-                                 modifier:kCTUnderlinePatternSolid
-                                    range:result.range];
-    }
-
-    if (self.attributesForLinks.count > 0) {
-      [attributedString addAttributes:self.attributesForLinks range:result.range];
-    }
-    if (self.attributesForHighlightedLink.count > 0 && NSEqualRanges(result.range, self.touchedLink.range)) {
-      [attributedString addAttributes:self.attributesForHighlightedLink range:result.range];
-    }
   }
 }
 
