@@ -126,7 +126,7 @@
 - (void)setChromeVisibility:(BOOL)isVisible animated:(BOOL)animated;
 - (void)setChromeTitle;
 
-
+- (void)addTapGestureToView;
 @end
 
 /** @name Configuring Functionality */
