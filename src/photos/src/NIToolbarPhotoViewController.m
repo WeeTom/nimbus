@@ -173,7 +173,7 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)loadView {
   [super loadView];
-
+    
   self.view.backgroundColor = [UIColor blackColor];
 
   CGRect bounds = self.view.bounds;
@@ -185,10 +185,8 @@
                                    bounds.size.width, toolbarHeight);
 
   _toolbar = [[UIToolbar alloc] initWithFrame:toolbarFrame];
-    if (MD_SYSVersionUnder7) {
-        _toolbar.barStyle = UIBarStyleBlack;
-        _toolbar.translucent = self.toolbarIsTranslucent;
-    }
+    _toolbar.barStyle = UIBarStyleBlack;
+    _toolbar.translucent = self.toolbarIsTranslucent;
   _toolbar.autoresizingMask = (UIViewAutoresizingFlexibleWidth
                                | UIViewAutoresizingFlexibleTopMargin);
 
@@ -218,16 +216,14 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-    if (MD_SYSVersionUnder7) {
-        [[UIApplication sharedApplication] setStatusBarStyle: (NIIsPad()
-                                                               ? UIStatusBarStyleBlackOpaque
-                                                               : UIStatusBarStyleBlackTranslucent)
-                                                    animated: animated];
-        
-        UINavigationBar* navBar = self.navigationController.navigationBar;
-        navBar.barStyle = UIBarStyleBlack;
-        navBar.translucent = YES;
-    }
+    [[UIApplication sharedApplication] setStatusBarStyle: (NIIsPad()
+                                                           ? UIStatusBarStyleBlackOpaque
+                                                           : UIStatusBarStyleBlackTranslucent)
+                                                animated: animated];
+    
+    UINavigationBar* navBar = self.navigationController.navigationBar;
+    navBar.barStyle = UIBarStyleBlack;
+    navBar.translucent = YES;
   _previousButton.enabled = [self.photoAlbumView hasPrevious];
   _nextButton.enabled = [self.photoAlbumView hasNext];
 }
