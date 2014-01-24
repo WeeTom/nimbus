@@ -104,7 +104,7 @@
 
     if (nil == _photoScrubberView) {
       CGRect scrubberFrame = CGRectMake(0, 0,
-                                        self.toolbar.bounds.size.width,
+                                        self.toolbar.bounds.size.width*0.6,
                                         self.toolbar.bounds.size.height);
       _photoScrubberView = [[NIPhotoScrubberView alloc] initWithFrame:scrubberFrame];
       _photoScrubberView.autoresizingMask = (UIViewAutoresizingFlexibleWidth
@@ -114,7 +114,7 @@
 
     UIBarButtonItem* scrubberItem =
     [[UIBarButtonItem alloc] initWithCustomView:self.photoScrubberView];
-    self.toolbar.items = [NSArray arrayWithObjects:
+    self.toolbar.items = [NSArray arrayWithObjects:flexibleSpace,
                           flexibleSpace, scrubberItem, flexibleSpace,
                           nil];
 
