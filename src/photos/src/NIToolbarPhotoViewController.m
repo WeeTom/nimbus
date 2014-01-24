@@ -216,14 +216,16 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewWillAppear:(BOOL)animated {
   [super viewWillAppear:animated];
-    [[UIApplication sharedApplication] setStatusBarStyle: (NIIsPad()
-                                                           ? UIStatusBarStyleBlackOpaque
-                                                           : UIStatusBarStyleBlackTranslucent)
-                                                animated: animated];
-    
-    UINavigationBar* navBar = self.navigationController.navigationBar;
-    navBar.barStyle = UIBarStyleBlack;
-    navBar.translucent = YES;
+
+  [[UIApplication sharedApplication] setStatusBarStyle: (NIIsPad()
+                                                         ? UIStatusBarStyleBlackOpaque
+                                                         : UIStatusBarStyleBlackTranslucent)
+                                              animated: animated];
+
+  UINavigationBar* navBar = self.navigationController.navigationBar;
+  navBar.barStyle = UIBarStyleBlack;
+  navBar.translucent = self.toolbarIsTranslucent;
+
   _previousButton.enabled = [self.photoAlbumView hasPrevious];
   _nextButton.enabled = [self.photoAlbumView hasNext];
 }
