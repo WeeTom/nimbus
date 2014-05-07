@@ -70,7 +70,7 @@
 
   NSString* reuseIdentifier = nil;
   if ([view respondsToSelector:@selector(reuseIdentifier)]) {
-    reuseIdentifier = [view reuseIdentifier];;
+    reuseIdentifier = [view reuseIdentifier];
   }
   if (nil == reuseIdentifier) {
     reuseIdentifier = NSStringFromClass([view class]);
