@@ -64,6 +64,10 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 }
 
 - (void)setTextColor:(UIColor *)color range:(NSRange)range {
+    if (NSMaxRange(range) > self.length) {
+        NSLog(@"NSMutableAttributedString+NimbusAttributedLabel.m line 68");
+        return;
+    }
   [self removeAttribute:NSForegroundColorAttributeName range:range];
 
   if (nil != color) {
@@ -76,6 +80,10 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 }
 
 - (void)setFont:(UIFont *)font range:(NSRange)range {
+    if (NSMaxRange(range) > self.length) {
+        NSLog(@"NSMutableAttributedString+NimbusAttributedLabel.m line 84");
+        return;
+    }
   [self removeAttribute:NSFontAttributeName range:range];
 
   if (nil != font) {
@@ -90,6 +98,10 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 - (void)setUnderlineStyle:(CTUnderlineStyle)style
                  modifier:(CTUnderlineStyleModifiers)modifier
                     range:(NSRange)range {
+    if (NSMaxRange(range) > self.length) {
+        NSLog(@"NSMutableAttributedString+NimbusAttributedLabel.m line 102");
+        return;
+    }
   [self removeAttribute:NSUnderlineStyleAttributeName range:range];
   [self addAttribute:NSUnderlineStyleAttributeName value:@(style|modifier) range:range];
 }
@@ -100,6 +112,10 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 }
 
 - (void)setStrokeWidth:(CGFloat)width range:(NSRange)range {
+    if (NSMaxRange(range) > self.length) {
+        NSLog(@"NSMutableAttributedString+NimbusAttributedLabel.m line 116");
+        return;
+    }
   [self removeAttribute:NSStrokeWidthAttributeName range:range];
   [self addAttribute:NSStrokeWidthAttributeName value:@(width) range:range];
 }
@@ -109,6 +125,10 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 }
 
 - (void)setStrokeColor:(UIColor *)color range:(NSRange)range {
+    if (NSMaxRange(range) > self.length) {
+        NSLog(@"NSMutableAttributedString+NimbusAttributedLabel.m line 129");
+        return;
+    }
   [self removeAttribute:NSStrokeColorAttributeName range:range];
   if (nil != color.CGColor) {
     [self addAttribute:NSStrokeColorAttributeName value:color range:range];
@@ -120,6 +140,10 @@ NI_FIX_CATEGORY_BUG(NSMutableAttributedStringNimbusAttributedLabel)
 }
 
 - (void)setKern:(CGFloat)kern range:(NSRange)range {
+    if (NSMaxRange(range) > self.length) {
+        NSLog(@"NSMutableAttributedString+NimbusAttributedLabel.m line 144");
+        return;
+    }
   [self removeAttribute:NSKernAttributeName range:range];
   [self addAttribute:NSKernAttributeName value:@(kern) range:range];
 }
