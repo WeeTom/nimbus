@@ -1449,14 +1449,16 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
       continue;
     }
 
-    NSString* label = [self.mutableAttributedString.string substringWithRange:result.range];
-    for (NSValue* rectValue in rectsForLink) {
-      UIAccessibilityElement* element = [[UIAccessibilityElement alloc] initWithAccessibilityContainer:self];
-      element.accessibilityLabel = label;
-      element.accessibilityFrame = [self convertRect:rectValue.CGRectValue toView:self.window];
-      element.accessibilityTraits = UIAccessibilityTraitLink;
-      [accessibleElements addObject:element];
-    }
+      if (NSMaxRange(result.range) <= self.mutableAttributedString.string.length) {
+          NSString* label = [self.mutableAttributedString.string substringWithRange:result.range];
+          for (NSValue* rectValue in rectsForLink) {
+              UIAccessibilityElement* element = [[UIAccessibilityElement alloc] initWithAccessibilityContainer:self];
+              element.accessibilityLabel = label;
+              element.accessibilityFrame = [self convertRect:rectValue.CGRectValue toView:self.window];
+              element.accessibilityTraits = UIAccessibilityTraitLink;
+              [accessibleElements addObject:element];
+          }
+      }
   }
 
   // Add this label's text as the "bottom-most" accessibility element, i.e. the last element in the
