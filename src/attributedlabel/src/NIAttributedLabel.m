@@ -86,7 +86,10 @@ CGSize NISizeOfAttributedStringConstrainedToSize(NSAttributedString* attributedS
     CFRelease(frame);
     CFRelease(path);
   }
-
+  else if (numberOfLines == 0) {
+      constraintSize = CGSizeMake(constraintSize.width, CGFLOAT_MAX);
+      range = CFRangeMake(0, attributedString.length);
+  }
   CGSize newSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, range, NULL, constraintSize, NULL);
 
   CFRelease(framesetter);
