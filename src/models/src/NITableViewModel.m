@@ -65,19 +65,19 @@
 
 
 - (void)_resetCompiledData {
-    self.sections = nil;
-    self.sectionIndexTitles = nil;
-    self.sectionPrefixToSectionIndex = nil;
+  [self _setSectionsWithArray:nil];
+  self.sectionIndexTitles = nil;
+  self.sectionPrefixToSectionIndex = nil;
 }
 
 - (void)_compileDataWithListArray:(NSArray *)listArray {
-    [self _resetCompiledData];
-    
-    if (nil != listArray) {
-        NITableViewModelSection* section = [NITableViewModelSection section];
-        section.rows = listArray;
-        self.sections = [NSArray arrayWithObject:section];
-    }
+  [self _resetCompiledData];
+
+  if (nil != listArray) {
+    NITableViewModelSection* section = [NITableViewModelSection section];
+    section.rows = [listArray mutableCopy];
+    [self _setSectionsWithArray:@[ section ]];
+  }
 }
 
 - (void)_compileDataWithSectionedArray:(NSArray *)sectionedArray {
@@ -135,10 +135,19 @@
         section.rows = currentSectionRows;
         [sections addObject:section];
     }
-    currentSectionRows = nil;
-    
-    // Update the compiled information for this data source.
-    self.sections = sections;
+
+  // Commit any unfinished sections.
+  if ([currentSectionRows count] > 0 || nil != currentSectionHeaderTitle) {
+    NITableViewModelSection* section = [NITableViewModelSection section];
+    section.headerTitle = currentSectionHeaderTitle;
+    section.footerTitle = currentSectionFooterTitle;
+    section.rows = currentSectionRows;
+    [sections addObject:section];
+  }
+  currentSectionRows = nil;
+
+  // Update the compiled information for this data source.
+  [self _setSectionsWithArray:sections];
 }
 
 - (void)_compileSectionIndex {
@@ -220,6 +229,10 @@
     
     self.sectionIndexTitles = titles;
     self.sectionPrefixToSectionIndex = sectionPrefixToSectionIndex;
+}
+
+- (void)_setSectionsWithArray:(NSArray *)sectionsArray {
+  self.sections = sectionsArray;
 }
 
 #pragma mark - UITableViewDataSource

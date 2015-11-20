@@ -98,26 +98,34 @@
 
 
 - (NITableViewModelSection *)_appendSection {
-    if (nil == self.sections) {
-        self.sections = [NSMutableArray array];
-    }
-    NITableViewModelSection* section = nil;
-    section = [[NITableViewModelSection alloc] init];
-    section.rows = [NSMutableArray array];
-    [self.sections addObject:section];
-    return section;
+  if (nil == self.sections) {
+    [self _setSectionsWithArray:[NSMutableArray array]];
+  }
+  NITableViewModelSection* section = nil;
+  section = [[NITableViewModelSection alloc] init];
+  section.rows = [NSMutableArray array];
+  [self.sections addObject:section];
+  return section;
 }
 
 - (NITableViewModelSection *)_insertSectionAtIndex:(NSUInteger)index {
-    if (nil == self.sections) {
-        self.sections = [NSMutableArray array];
-    }
-    NITableViewModelSection* section = nil;
-    section = [[NITableViewModelSection alloc] init];
-    section.rows = [NSMutableArray array];
-    NIDASSERT(index >= 0 && index <= self.sections.count);
-    [self.sections insertObject:section atIndex:index];
-    return section;
+  if (nil == self.sections) {
+    [self _setSectionsWithArray:[NSMutableArray array]];
+  }
+  NITableViewModelSection* section = nil;
+  section = [[NITableViewModelSection alloc] init];
+  section.rows = [NSMutableArray array];
+  NIDASSERT(index >= 0 && index <= self.sections.count);
+  [self.sections insertObject:section atIndex:index];
+  return section;
+}
+
+- (void)_setSectionsWithArray:(NSArray *)sectionsArray {
+  if ([sectionsArray isKindOfClass:[NSMutableArray class]]) {
+    self.sections = (NSMutableArray *)sectionsArray;
+  } else {
+    self.sections = [sectionsArray mutableCopy];
+  }
 }
 
 #pragma mark - UITableViewDataSource
